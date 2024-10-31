@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/UserModel.js";
+import { compare } from "bcrypt";
 
 const age=3*24*60*60*1000
 
@@ -30,6 +31,46 @@ export const signup= async (request, response,next)=>{
             // lastname:user.lastname,
             // image:user.image,
             profileSetup:user.profileSetop
+        }
+    })
+        
+    } catch (err) {
+        return  response.status(500).json("internal sever error");
+    }
+}
+
+export const login= async (request, response,next)=>{
+    const {email, password}=request.body
+
+    try {
+
+    if(!email || !password){
+        return response.status(400).json("email and passwor is requied")
+    }
+    const user= await User.findOne({email})
+
+    if(!user){
+        return response.status(400).json("user with the given email id in not present")
+    }
+
+    const auth= compare(password, user.password)
+    if(!auth){
+        return response.status(400).json("password is incorrect")
+    }
+    response.cookie("jwt",createToken(email,user.id), {
+        age,
+        scure:true,
+        sameSite:"None"
+    })
+    return response.status(200).json({
+        user:{
+            id:user.id,
+            email:user.email,
+            firstname:user.firstname,
+            lastname:user.lastname,
+            image:user.image,
+            profileSetup:user.profileSetop,
+            color:user.color
         }
     })
         
