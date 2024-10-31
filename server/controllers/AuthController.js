@@ -78,3 +78,27 @@ export const login= async (request, response,next)=>{
         return  response.status(500).json("internal sever error");
     }
 }
+
+export const getUserInfo= async (request, response,next)=>{
+
+    try {
+
+        console.log(request.userId);
+        const userData= await User.findOne(request.userId)
+        if(!userData){
+            return response.status(400).json("user with the given id in not found")
+        }
+    return response.status(200).json({
+            id:userData.id,
+            email:userData.email,
+            firstname:userData.firstname,
+            lastname:userData.lastname,
+            image:userData.image,
+            profileSetup:userData.profileSetop,
+            color:userData.color
+    })
+        
+    } catch (err) {
+        return  response.status(500).json("internal sever error");
+    }
+}

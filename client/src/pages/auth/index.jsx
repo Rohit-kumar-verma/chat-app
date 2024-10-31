@@ -6,9 +6,12 @@ import {Button} from '../../components/ui/button'
 import {useToast} from '../../components/ui/use-toast'
 import apiClient from '../../lib/api-client.js'
 import { SIGNUP_ROUTE, LOGIN_ROUTE } from '../../utils/constants.js'
-
+import { useAppStore } from '../../store'
+import {useNavigate} from 'react-router-dom'
 
 const Auth = () => {
+    const navigate=useNavigate()
+    const {setUserInfo}=useAppStore()
     const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
     const [confirmPassword,setConfirmPassword]=useState("")
@@ -56,6 +59,12 @@ const Auth = () => {
             try {
                 const response = await apiClient.post(LOGIN_ROUTE, { email, password },{withCredentials:true});
                 console.log(response); // Or handle success (e.g., redirect)
+
+                if(response.data.user.id){
+                    setUserInfo(response.data.user)
+                    if(response.data.user.profileSetup) navigate("/chat")
+                    else navigate("/profile ")
+                }
             } catch (error) {
                 toast({
                     description: "Login failed. Please try again.",
@@ -69,7 +78,11 @@ const Auth = () => {
         if (validatesignup()) {
             try {
                 const response = await apiClient.post(SIGNUP_ROUTE, { email, password });
-                console.log(response); // Or handle success (e.g., redirect)
+                console.log(response);
+                if(response.status===(200||201)) {
+                    setUserInfo(response.data.user)
+                    navigate("/profile")
+                }// Or handle success (e.g., redirect)
             } catch (error) {
                 toast({
                     description: "Signup failed. Please try again.",
