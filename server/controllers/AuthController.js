@@ -59,7 +59,7 @@ export const login= async (request, response,next)=>{
     }
     response.cookie("jwt",createToken(email,user.id), {
         age,
-        scure:true,
+        scure:false,
         sameSite:"None"
     })
     return response.status(200).json({

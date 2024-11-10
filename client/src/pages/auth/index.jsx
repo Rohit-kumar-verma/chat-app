@@ -59,7 +59,6 @@ const Auth = () => {
             try {
                 const response = await apiClient.post(LOGIN_ROUTE, { email, password },{withCredentials:true});
                 console.log(response); // Or handle success (e.g., redirect)
-
                 if(response.data.user.id){
                     setUserInfo(response.data.user)
                     if(response.data.user.profileSetup) navigate("/chat")

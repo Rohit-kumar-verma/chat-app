@@ -11,14 +11,16 @@ import { GET_USER_INFO } from './utils/constants'
 
 const PrivateRoute=({Children})=>{
   const {userInfo}= useAppStore()
+  // console.log(userInfo);
   const isAuthenticated= !!userInfo
+  console.log(isAuthenticated);
   return isAuthenticated ? Children : <Navigate to="/auth"/>
 }
 
-const AuthRoute=({Children})=>{
+const AuthRoute=({children})=>{
   const {userInfo}= useAppStore()
   const isAuthenticated= !!userInfo
-  return isAuthenticated ? <Navigate to="/auth"/>: Children
+  return isAuthenticated ? <Navigate to="/auth"/>: children
 }
 
 function App() {

@@ -1,7 +1,7 @@
 const createAuthSlice = (set)=>(
     {
         userInfo:undefined,
-        setUserInfo:(userInfo)=>set({userInfo}),
+        setUserInfo:(user)=>set({userInfo:user}),
     }
 )
 
